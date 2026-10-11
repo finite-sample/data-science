@@ -1,0 +1,488 @@
+\documentclass[compress, black]{beamer}
+\setbeamercolor{normal text}{fg=black}
+\beamertemplatesolidbackgroundcolor{white}
+\usecolortheme[named=black]{structure}
+\usepackage{caption}
+\captionsetup{labelformat=empty}
+\setbeamertemplate{navigation symbols}{}
+%\usefonttheme{structurebold}
+\usepackage[scaled]{helvet}
+\renewcommand*\familydefault{\sfdefault} %% Only if the base font of the document is to be sans serif
+\usepackage[T1]{fontenc}
+\usepackage{setspace}
+%\usepackage{beamerthemesplit}
+\usepackage{graphics}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{verbatim}
+\AtBeginEnvironment{verbatim}{\footnotesize}
+\usepackage{amssymb}
+\usepackage{wrapfig}
+\usefonttheme[onlymath]{serif}
+\usepackage{cmbright}
+\usepackage[normalem]{ulem}
+\def\labelitemi{\textemdash}
+\setbeamertemplate{frametitle}{
+  \begin{centering}
+    \vskip15pt
+    \insertframetitle
+    \par
+  \end{centering}
+}
+\title[DS]{Data Science}
+\author[Sood]{Gaurav~Sood}
+  \large
+\date{}
+\subject{LearnDS}
+\begin{document}
+\newcommand{\multilineR}[1]{\begin{tabular}[b]{@{}r@{}}#1\end{tabular}}
+\newcommand{\multilineL}[1]{\begin{tabular}[b]{@{}l@{}}#1\end{tabular}}
+\newcommand{\multilineC}[1]{\begin{tabular}[b]{@{}c@{}}#1\end{tabular}}
+
+\newenvironment{large_enum}{
+\large
+\begin{itemize}
+  \setlength{\itemsep}{5pt}
+  \setlength{\parskip}{0pt}
+  \setlength{\parsep}{0pt}
+}{\end{itemize}}
+
+\frame
+  {
+    \titlepage
+  }
+
+\frame{
+\frametitle{Big Data}
+  \Large
+  \only<2>{\indent Big data attracted widespread attention in the 2010s.\\\vspace{10mm}} \only<3>{\includegraphics[width=.9\linewidth,height=.58\textheight,keepaspectratio]{img/bigdata.png}} \only<4>{\indent But where's the cheese?\\\vspace{10mm}}
+}
+\frame{
+  \center
+  \Large Some examples
+}
+\frame{
+  \frametitle{Fishing Out Fishy Figures}
+  \only<1>{
+  \begin{figure}[p]
+    \centering \includegraphics[width=.9\linewidth,height=.58\textheight,keepaspectratio]{img/economist.png}
+    \end{figure}
+    \small ``The CPINu's August inflation figure of \alert{1.3\%} is less than half the \alert{2.65\%} of the CPI Congreso, a compilation of private estimates
+    gathered by opposition members of Congress.'' (\href{http://www.economist.com/blogs/americasview/2014/09/statistics-argentina}{Economist})}
+  \only<2>{
+  \begin{figure}[p]
+    \centering \includegraphics[width=.9\linewidth,height=.58\textheight,keepaspectratio]{img/ArgentinaPriceIndex.png}
+    \end{figure}
+    \small Source: \href{http://www.mit.edu/~afc/papers/Cavallo-Argentina-JME.pdf}{Online vs Official Price Indexes: Measuring Argentina's Inflation By Alberto Cavallo}}
+}
+
+\frame{
+  \frametitle{Suicide Risk in Army STARRS}
+  \Large
+  \only<2>{Can administrative data help identify elevated suicide risk after psychiatric hospitalization?}
+  \only<3>{\begin{figure}[p]
+    \centering
+  \includegraphics[width=.9\linewidth,height=.58\textheight,keepaspectratio]{img/ArmySuicides.png}\\
+  \end{figure}
+  }
+  \only<4>{STARRS studied U.S. Army soldiers after psychiatric hospital discharge, not all soldiers.}
+  \only<5>{The highest-risk 5\% of hospitalizations accounted for 52.9\% of suicides within 12 months of discharge. Predictive concentration alone does not establish that an intervention prevents suicide.\\\vspace{5mm}
+  \small \href{http://fivethirtyeight.com/features/the-army-is-building-an-algorithm-to-prevent-suicide/}{538 Article}\\
+      \href{http://www.ncbi.nlm.nih.gov/pubmed/25390793}{STARRS paper}}
+}
+\frame{
+  \frametitle{Predictive Policing: Historical Examples}
+  \Large
+  \only<1>{Minority Report}
+  \only<2>{Predictive, `CompStat', `HotSpot' Policing}
+  \only<3>{\href{http://www.predpol.com/}{PredPol}: Predictive Policing\\\normalsize
+         LAPD, Atlanta PD \\
+         Based off earthquake prediction algorithm}
+  \only<4>{``During a four-month trial in Kent, \alert{8.5\%} of all street crime occurred within PredPol's pink boxes, with plenty more next door to them; predictions from police analysts scored only \alert{5\%}. An earlier trial in Los Angeles saw the machine score \alert{6\%} compared with human analysts' \alert{3\%}.''\\\vspace{5mm}
+  \small \href{http://www.economist.com/news/briefing/21582042-it-getting-easier-foresee-wrongdoing-and-spot-likely-wrongdoers-dont-even-think-about-it}{Economist}}
+  \only<5>{\includegraphics[width=.9\linewidth,height=.58\textheight,keepaspectratio]{img/PredictivePolicing.jpg}}
+}
+\frame{
+\frametitle{Web Search}
+\only<2>{\begin{figure}[p]
+    \centering\includegraphics[width=.9\linewidth,height=.58\textheight,keepaspectratio]{img/yahoo.jpg}
+    \end{figure}
+    }
+\only<3-7>{
+  \begin{large_enum}
+  \item<3->[--]Human Curation, Ad-hoc automation
+  \item<4->[--]In 2012, Google reported crawling over 20 billion URLs a day (Sullivan).
+  \item<5->[--]It reported 100 billion search queries a month (Sullivan 2012).
+  \item<6->[--] Search requires fast retrieval from a very large index.
+  \item<7->[--]Page Rank
+  \end{large_enum}
+  }
+}
+\frame{
+  \frametitle{Side-effects of Drugs}
+  \Large
+  \only<2>{``Adverse drug events cause substantial morbidity and mortality and are often discovered after a drug comes to market.''}
+  \only<3>{FDA collects this information from ``physicians, pharmacists, patients, and drug companies'' but these reports ``are incomplete and biased''}
+  \only<4>{``\alert{paroxetine} and \alert{pravastatin}, whose interaction was \alert{reported to cause hyperglycemia after the time period of the online logs} used in the analysis''}
+  \only<5>{\begin{figure}[p]
+    \centering
+  \includegraphics[width=.9\linewidth,height=.58\textheight,keepaspectratio]{img/jama.png}\\
+  \end{figure}
+  \small \href{http://www.ncbi.nlm.nih.gov/pubmed/23467469}{Web-scale Pharmacovigilance: Listening to Signals from the Crowd.} By White et al.}
+}
+\frame{
+\frametitle{Flu Season}
+\Large
+  \only<1>{How many got the sniffles?}
+  \only<2>{How many got the sniffles in the past month?}
+  \only<3>{
+    \begin{figure}[p]
+      \centering
+    \includegraphics[width=.9\linewidth,height=.58\textheight,keepaspectratio]{img/GoogleFlu09Current.png}\\
+    \end{figure}
+  \small \href{http://www.google.org/flutrends/us/}{Google Flu Trends}
+  }
+  \only<4>{Google Flu is sick.}
+  \only<5>{\begin{figure}[p]
+    \centering
+  \includegraphics[width=.9\linewidth,height=.58\textheight,keepaspectratio]{img/GoogleFlu.png}\\
+  \end{figure}
+  \small \href{http://bit.ly/1KMwZ0Y}{The Parable of Google Flu: Traps in Big Data Analysis.} By Lazer et al.
+  }
+}
+
+\frame{
+  \frametitle{Spam or Ham}
+  \only<1>{
+    \begin{figure}[p]
+      \centering
+    \includegraphics[width=.9\linewidth,height=.58\textheight,keepaspectratio]{img/spam.jpg}\\
+    \end{figure}
+  }
+  \only<2-4>{
+  \begin{large_enum}
+  \item[-]<2->``According to Commtouch's Internet Threats Trend Report for the first quarter of 2013, an average of \alert{97.4 billion} spam e-mails and \alert{973 million} malware e-mails were sent worldwide each day in Q1 2013 (h/t Softpedia).''
+  \item[-]<3->Spam Filter
+  \item[-]<4->$logit [p(spam)] = \alpha + f'\beta$ where $f$ is frequencies.
+  \end{large_enum}
+  }
+}
+\frame{
+  \frametitle{Vote}
+  \only<1-2>{
+    \begin{figure}[!htb]
+      \centering
+    \includegraphics[width=.9\linewidth,height=.58\textheight,keepaspectratio]{img/61million.png}
+    \end{figure}
+  }
+  \Large
+  \only<2>{The social message increased validated turnout by \alert{0.39 percentage points} relative to the informational message (Bond et al., 2012).}
+}
+\frame{
+  \frametitle{Vote for Obama}
+  \begin{large_enum}
+  \item[--]<1->{Obama 2012 Campaign}
+  \item[--]<2->{Highly customized messaging: Soccer Moms, NASCAR dads \ldots}
+  \item[--]<3->{\href{http://citoresearch.com/print/1813}{Used SQL database Vertica for `speed-of-thought' analyses.}}
+  \end{large_enum}
+}
+\frame{
+  \center
+  \Large What do we mean by big data?
+}
+\frame{
+\frametitle{What do we mean by big data?}
+  \begin{large_enum}
+  \item[--]<1->Big in rows (size \textit{n})\\
+         Big in columns (dimensions \textit{p})
+  \item[--]<2->Hard to extract value from
+  \item[--]<3-> `Big data' is high \textbf{volume}, high \textbf{velocity} and high \textbf{variety} information assets that demand cost-effective, innovative forms of information processing[.]\\\normalsize\indent
+            Gartner, Inc.'s ``3Vs'' definition.
+  \end{large_enum}
+}
+\frame{
+  \frametitle{Sources of (Big) Data}
+  \begin{large_enum}
+   \item[--]<1->Data as the by-product of other activities\\
+        \begin{enumerate}
+             \item[--]<2-> Click trail, clicks before a purchase
+             \item[--]<3-> Moving your body (\href{http://www.fitbit.com/}{Fitbit})
+             \item[--]<4-> Moving yourself without moving your body (\href{http://www.progressive.com/auto/snapshot/?version=default}{Snapshot})
+             \item[--]<5-> Data were always being generated. They just weren't being captured.
+             \begin{enumerate}
+                \item[--]<6->Cheaper, smaller sensors help.
+                \item[--]<7->So does cheaper storage.
+             \end{enumerate}
+           \end{enumerate}
+   \item[--]<8-> Data as the primary goal of activities\\\normalsize
+           Telescopes, Genetic sequencers, 61 million person experiments \ldots
+    \end{large_enum}
+}
+\frame{
+  \frametitle{How big are the data?}
+  \begin{large_enum}
+   \item[--]<2->Web\\\normalsize
+          20 billion webpages, each 20 KB = 400 TB \\ \pause
+          Say all stored on a single disk.\\ \pause
+          Read speed $\sim$ 50MB/sec.\\ \pause
+          About 93 days to read from disk to memory.
+   \item[--]<6->Astronomy (2015 projections) \\\normalsize
+         Apache Point Telescope $\sim$ 200 GB/night.\\
+         Large Synoptic Survey Telescope: 3 billion pixel camera \\
+         $\sim$ 30TB/night. In 10 years $\sim$ 60 PB
+   \item[--]<7->Life Sciences\\\normalsize
+          High Throughput sequencer $\sim$ 1 TB/day
+   \item[--]<8->CIA \\\normalsize \pause \pause
+          REDACTED
+   \end{large_enum}
+}
+
+\frame{
+  \center
+  \Large Implications for Statistics, Computation.
+}
+\frame{
+  \frametitle{Implications for Statistics}
+  \begin{large_enum}
+    \item[--]<2->Little data, Big data\\ \pause \pause \normalsize
+           Sampling still matters
+    \item[--]<4->Large samples can make small effects statistically significant\\\normalsize \pause \pause
+          \[\mathrm{FDP}=\frac{\text{false positives}}{\max(1,\text{rejections})}.\]\\
+          Benjamini and Hochberg (1995) (FDR), cost of false discovery, Familywise error rate (Bonferroni)
+    \item[--]<6->Inverting a matrix\\\normalsize \pause \pause
+           (Stochastic) Gradient Descent (Ascent), BFGS, \ldots
+    \item[--]<8->Causal inference\\\normalsize \pause \pause
+           Large $p$ may help\\ \pause
+           Causal claims still require a credible design and assumptions
+  \end{large_enum}
+}
+
+\frame{
+  \frametitle{Implications for Computation}
+  \begin{large_enum}
+  \item[--]<1->Conventional Understanding of what is computationally tractable: Polynomial time algorithm ($N^k$)
+  \item[--]<2->Ideal parallel speedup divides work by $m$ computers; communication and serial work limit the gain.
+  \item[--]<3->For really big data, complexity matters\\\normalsize
+         Tree traversal: $O(N)$; balanced lookup: $O(\log N)$; comparison sorting: $O(N\log N)$\\
+         Streaming application
+    \end{large_enum}
+}
+\frame{
+  \center
+  \Large MapReduce and PageRank
+}
+\frame{
+\Large
+  20 billion webpages, each 20 KB = 400 TB \\
+  Say all data stored on a single disk. Read speed $\sim$ 50MB/sec.\\
+  About 93 days to read from disk to memory.
+}
+\frame{
+  \frametitle{Solution, Problem}
+  \begin{large_enum}
+  \item[--]<1->Parallelize, if 1000 computers, then ideally about 2.2 hours
+  \item[--]<2->But \ldots
+    \begin{enumerate}
+    \item[--]<3->Nodes can fail.\\
+           Say single node fails once every 1000 days.\\
+           Expect about 1000 failures per day across 1 million servers.
+    \item[--]<4->Network bandwidth $\sim$ 1 Gb/s (gigabit per second).\\
+           Transferring 10 TB takes about 22 hours, before overhead.
+    \item[--]<5->Distributed programming can be very very hard.
+    \end{enumerate}
+  \end{large_enum}
+}
+\frame{
+  \frametitle{Solution: MapReduce}
+  \begin{large_enum}
+  \item[--]<1->Store data redundantly
+  \begin{enumerate}
+    \item[--]<2->Distributed File Systems, e.g. GFS, HDFS
+    \item[--]<3->Typical usage pattern: Data rarely updated. Read often. Updated through appends.
+    \item[--]<4->Implementation:\\
+        Data kept in chunks, machines called `chunk servers'\\
+        Chunks replicated. Typically 3x. One in a completely separate rack.\\
+        Master node (GFS)/Name Node (HDFS) tracks metadata
+  \end{enumerate}
+  \item[--]<5->Minimize data movement
+  \item[--]<6->Simple programming model
+  \end{large_enum}
+}
+\frame{
+\frametitle{More About MapReduce}
+\Large
+  \begin{large_enum}
+  \item[--]<1->Name comes from 2004 paper \href{http://static.googleusercontent.com/media/research.google.com/en/us/archive/mapreduce-osdi04.pdf}{MapReduce: Simplified Data Processing on Large Clusters} by Dean and Ghemawat.
+  \item[--]<2->Implementation - Hadoop (via Yahoo)/Apache
+  \end{large_enum}
+}
+\frame{
+  \frametitle{MapReduce Example}
+  \begin{large_enum}
+  \item[--]<1->Count each distinct word in a huge document, e.g. urls
+  \begin{enumerate}
+    \item[--]<2->Map function produces key, value pairs\\
+           Word frequency of every word in each document
+    \item[--]<3->Send different words to different computers
+    \item[--]<4->Combine
+  \end{enumerate}
+   \end{large_enum}
+}
+\begin{frame}[fragile]
+  \begin{verbatim}
+  map(String input_key, String input_value):
+  // input_key: document name
+  // input_value: document contents
+  for each word w in input_value:
+    EmitIntermediate(w, "1");
+
+
+reduce(String output_key, Iterator intermediate_values):
+  // output_key: a word
+  // output_values: a list of counts
+  int result = 0;
+  for each v in intermediate_values:
+    result += ParseInt(v);
+  Emit(AsString(result));
+\end{verbatim}
+\end{frame}
+\frame{
+  \frametitle{PageRank}
+  \begin{large_enum}
+  \item[--]<1->\href{http://ilpubs.stanford.edu:8090/422/1/1999-66.pdf}{The PageRank Citation Ranking: Bringing Order to the Web} By Page et al.
+  \item[--]<2->\href{http://www.cs.uvm.edu/~icdm/algorithms/10Algorithms-08.pdf}{Among the top 10 data mining algorithms}
+  \item[--]<3->Search
+      \begin{enumerate}
+      \item[-]<4->Searching for similarity
+      \item[-]<5->Works well when you look for a document in your computer.\\ Any small trusted corpora.
+      \item[-]<6->Web - lots of matches.
+      \item[-]<7->Web - lots of false positives. Some of it malware peddling sites.
+      \end{enumerate}
+  \end{large_enum}
+}
+\frame{
+  \frametitle{PageRank}
+  \begin{large_enum}
+  \item[--]<1->How to order conditional on similarity?
+    \begin{enumerate}
+      \item[-]<2->One can rank by popularity if you have complete web traffic information.
+      \item[-]<3->But those data are hard to get.
+      \item[-]<4->Or you can do ad hoc automation and human curation.
+      \item[-]<5->But costly to implement. And don't scale.
+    \end{enumerate}
+  \item[--]<6->Innovation: see Internet as a graph\\ \normalsize
+         Nodes = webpages, Edges = hyperlinks \\
+         Ranks based on linking patterns alone.
+  \item[--]<7->Currency is in-links.
+  \end{large_enum}
+}
+\frame{
+\frametitle{PageRank}
+\Large
+\begin{large_enum}
+  \item[--]<1->Each in-link is a vote.
+  \item[--]<2->But each vote is not equal.
+  \item[--]<3->In-links from more important pages count for more
+  \item[--]<4->Value of each vote:
+    \begin{enumerate}
+      \item[-]<5->Proportional to importance of source page
+      \item[-]<6->Inversely proportional to number of outgoing links on the source page
+      \item[-]<7->Say page $i$ has importance $r_i$, and $n$ outgoing links, each vote = $r_i/n$
+    \end{enumerate}
+\end{large_enum}
+}
+
+\frame{
+  \frametitle{Page Rank Example}
+  \begin{figure}[p]
+    \centering
+  \includegraphics[width=.9\linewidth,height=.58\textheight,keepaspectratio]{img/PageRankExample.png}
+  \end{figure}
+  Source: Wikipedia
+}
+\frame{
+\frametitle{PageRank}
+\Large
+\only<1->{Say page $i$ gets links from pages $j$ ($n=5$, $r_j$) and $k$ ($n=2$, $r_k$)}\\
+\only<2->{\begin{align*} r_{i} = \frac{r_{j}}{5} + \frac{r_{k}}{2} \end{align*}}
+\only<3->{Each of the $d_j$ outgoing links from page $j$ carries $r_j/d_j$.}
+\only<4->{\begin{align*} r_i = \sum \frac{r_j}{d_j}\end{align*} over $j$ where $j$ tracks all the pages pointing to $i$.}
+}
+\frame{
+\frametitle{PageRank: Random Surfer}
+\begin{large_enum}
+\item With probability $\alpha$, follow an outgoing link; otherwise jump uniformly to one of $N$ pages.
+\item A dangling page (no outlinks) distributes its rank uniformly.
+\end{large_enum}
+\[
+r_i=\frac{1-\alpha}{N}+\alpha\left(
+\sum_{j\to i}\frac{r_j}{d_j}+\frac{1}{N}\sum_{j:d_j=0}r_j\right).
+\]
+Here $0<\alpha<1$, $d_j$ is the outdegree, and $\sum_i r_i=1$.
+}
+\frame{
+  \center
+  \Large Class
+}
+\frame{
+  \frametitle{Data Science}
+  \begin{figure}[p]
+    \centering
+  \includegraphics[width=.9\linewidth,height=.58\textheight,keepaspectratio]{img/DataScience.png}\\
+  \end{figure}
+  \small \href{http://drewconway.com/zia/2013/3/26/the-data-science-venn-diagram}{Data Science Venn Diagram.} By Drew Conway
+}
+\frame{
+  \frametitle{Course Outline}
+  \begin{large_enum}
+   \item[--]<1->Get your own (big) data\\\normalsize
+          Scrape it, clean it\\
+          Basics of webscraping\\
+          Basics of regular expressions
+   \item[--]<2->Manage your (big) data\\\normalsize
+          Store it, organize it, use it\\
+          Relational Databases, SQL (SQLite)\\
+          Other databases
+   \item[--]<3->Analyze your (big) data\\\normalsize
+          Cross-validation\\
+          (Not) Maximally Likely\\
+          Numerical Optimization
+   \end{large_enum}
+}
+\frame{
+  \frametitle{Prerequisites}
+    \begin{large_enum}
+    \item[--]<1->Basic but important
+    \item[--]<2->Statistics:
+    \begin{enumerate}
+     \item[--]<1->Probability theory, some combinatorics
+     \item[--]<2->Linear Regression and other standard estimation techniques
+    \end{enumerate}
+    \item[--]<3->Computation:
+    \begin{enumerate}
+      \item[--]Have written a loop
+      \item[--]Have written a function
+    \end{enumerate}
+  \end{large_enum}
+}
+\frame{
+  \frametitle{Software and Programming}
+  \begin{large_enum}
+     \item[--]<1->Open Source\\\normalsize
+            License fees add up if you are running software on 1000's of machines
+     \item[--]<2->R
+          \begin{enumerate}
+           \item[--]<3->{\tt RStudio} IDE for R, Makes it easier to code.
+           \item[--]<4->{\tt R Markdown} For Documenting.
+           \end{enumerate}
+     \item[--]<6->Python \\\normalsize
+          \begin{enumerate}
+           \item[--]<7->Python 3 from \href{https://www.python.org/downloads/}{python.org}
+           \item[--]<8->Use an editor or IDE with Python support.
+           \end{enumerate}
+     \item[--]<9->SQLite
+   \end{large_enum}
+}
+
+
+\end{document}

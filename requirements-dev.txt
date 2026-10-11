@@ -1,0 +1,4 @@
+-r requirements.txt
+black>=26
+isort>=5.13
+flake8>=7

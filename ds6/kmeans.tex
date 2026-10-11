@@ -1,0 +1,242 @@
+\documentclass[compress]{beamer}
+\setbeamercolor{normal text}{fg=black}
+\beamertemplatesolidbackgroundcolor{white}
+\setbeamercovered{transparent, still covered={\opaqueness<1->{0}}, again covered={\opaqueness<1->{30}}}
+\usecolortheme[named=black]{structure}
+\definecolor{links}{HTML}{98AFC7}
+\hypersetup{colorlinks,linkcolor=,urlcolor=links}
+\usepackage{caption}
+\captionsetup{labelformat=empty}
+\setbeamertemplate{navigation symbols}{}
+%\usefonttheme{structurebold}
+
+\usepackage[scaled]{helvet}
+\renewcommand*\familydefault{\sfdefault} %% Only if the base font of the document is to be sans serif
+\usepackage[T1]{fontenc}
+\usepackage{setspace}
+%\usepackage{beamerthemesplit}
+\usepackage{graphics}
+
+
+
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{verbatim}
+\AtBeginEnvironment{verbatim}{\footnotesize}
+\usepackage{amssymb}
+\usepackage{wrapfig}
+\def\labelitemi{\textemdash}
+\setbeamertemplate{frametitle}{
+  \begin{centering}
+    \vskip15pt
+    \insertframetitle
+    \par
+  \end{centering}
+}
+\title[DS]{\includegraphics[width=2cm]{specialk.png}\\ $K$-means Clustering}
+\author[Sood]{gaurav~sood\\\href{http://www.gsood.com}{http://gsood.com}\\
+\href{https://twitter.com/soodoku}{twitter} \textbf{|} \href{http://github.com/soodoku}{github}}
+\large
+\date{}
+\subject{LearnDS}
+\begin{document}
+\newcommand{\multilineR}[1]{\begin{tabular}[b]{@{}r@{}}#1\end{tabular}}
+\newcommand{\multilineL}[1]{\begin{tabular}[b]{@{}l@{}}#1\end{tabular}}
+\newcommand{\multilineC}[1]{\begin{tabular}[b]{@{}c@{}}#1\end{tabular}}
+
+\newenvironment{large_enum}{
+\large
+\begin{itemize}
+  \setlength{\itemsep}{5pt}
+  \setlength{\parskip}{0pt}
+  \setlength{\parsep}{0pt}
+}{\end{itemize}}
+
+\frame
+  {
+    \titlepage
+  }
+
+\frame{
+  \frametitle{Unsupervised Learning}
+   \begin{large_enum}
+     \item[-]<2> Unsupervised learning finds structure without outcome labels
+     \item[-]<3> In supervised learning, labels guide prediction\\
+     \item[-]<4> Regression estimates a relationship between predictors and an outcome
+     \item[-]<5> Supervised Learning $\sim$ Given Apples and Oranges, learn traits of Apples Vs. Oranges
+     \item[-]<6> Given a bunch of spherical fruits, optimally describe types of fruits
+   \end{large_enum}
+}
+
+\frame{
+  \frametitle{Ways to Think About Unsupervised Learning}
+  \begin{large_enum}
+    \item[-]<2>Learning the probability model of the data $p(x_n|x_1,...,x_{n-1})$
+    \item[-]<3>\textbf{Applications:} Outlier detection, Data compression
+    \item[-]<4>Find rows similar to each other, groups of rows dissimilar to each other
+    \item[-]<5>Find columns similar to each other, groups of columns dissimilar to each other
+    \item[-]<6>\textbf{Applications:} Group movies by ratings, Segment shoppers
+ \end{large_enum}
+}
+
+\frame{
+\frametitle{Solutions}
+\begin{large_enum}
+  \item[-]<1-3>Two kinds of methods:
+  \begin{enumerate}
+    \item[-]<2->Principal components analysis
+    \item[-]<3->Clustering
+  \end{enumerate}
+  \item[-]<4>Clustering looks to partition data into similar subgroups
+  \item[-]<5-7>Two popular methods:
+    \begin{enumerate}
+      \item[-]<6-> Hierarchical clustering (computationally expensive)
+      \item[-]<7> $k$-means clustering (pre-specify $k$)
+    \end{enumerate}
+  \end{large_enum}
+}
+
+\frame{
+\only<1>{\scriptsize{Source: \href{http://research.microsoft.com/en-us/um/people/cmbishop/prml/}{Pattern Recognition and Machine Learning}}}
+
+  \only<1>{\center{\includegraphics[width=.9\linewidth,height=.58\textheight,keepaspectratio]{kmeans-ex.png}}}
+}
+
+\frame{
+\frametitle{$k$-Means Clustering}
+  \begin{large_enum}
+    \item[-]<1-3>$k$-means: Assume that we must split data into $k$ clusters
+      \begin{enumerate}
+       \item[-]<2-5>Each observation belongs to one cluster
+       \item[-]<3-5>No observation belongs to more than one cluster
+      \end{enumerate}
+    \item[-]<4>Find partitioning that minimizes within cluster variation summed over all $k$
+              clusters
+    \item[-]<5>Minimize squared Euclidean distance to cluster means. Equivalently:\\\normalsize
+      \begin{equation}
+      \text{min.}_{C_1,\ldots,C_K} \sum_{k=1}^{K} \frac{1}{2|C_k|} \sum_{i, i^{'} \in C_k} \sum_{j=1}^{p} (x_{ij} - x_{i^{'}j})^2
+      \end{equation}
+  \end{large_enum}
+}
+
+\frame{
+\frametitle{$k$-Means (Lloyd's) Algorithm}
+  \begin{large_enum}
+    \item[-]<2>Initialize $k$ distinct centroids; ensure clusters remain nonempty
+    \item[-]<3-5>Iterate:
+      \begin{enumerate}
+      \item[-]<4-> For each of the $k$ clusters, compute the centroid
+      \item[-]<5-> Assign each observation to cluster whose centroid is closest
+      \end{enumerate}
+  \end{large_enum}
+
+}
+\frame{
+\only<1-6>{\scriptsize{Source: James et al. 2015}}
+
+  \only<1>{\center{\includegraphics[width=.9\linewidth,height=.58\textheight,keepaspectratio]{kmeanspic1.png}}}\pause
+  \only<2>{\center{\includegraphics[width=.9\linewidth,height=.58\textheight,keepaspectratio]{kmeanspic2.png}}}\pause
+  \only<3>{\center{\includegraphics[width=.9\linewidth,height=.58\textheight,keepaspectratio]{kmeanspic3.png}}}\pause
+  \only<4>{\center{\includegraphics[width=.9\linewidth,height=.58\textheight,keepaspectratio]{kmeanspic4.png}}}\pause
+  \only<5>{\center{\includegraphics[width=.9\linewidth,height=.58\textheight,keepaspectratio]{kmeanspic5.png}}}\pause
+  \only<6>{\center{\includegraphics[width=.9\linewidth,height=.58\textheight,keepaspectratio]{kmeanspic.png}}}
+
+}
+
+\frame{
+ \frametitle{$k$-Means Algorithm}
+  \begin{large_enum}
+    \item[-]<0>Initialize $k$ distinct centroids; ensure clusters remain nonempty
+    \item[-]<0>Iterate:
+      \begin{enumerate}
+      \item[-]<1-> For each of the $k$ clusters, compute the centroid
+      \item[-]<1-> Assign each observation to cluster whose centroid is closest
+      \end{enumerate}
+    \item[-]<2>Why does it work?
+    \item[-]<3>Each step cannot increase the objective, but a global minimum is not guaranteed.
+    \item[-]<4->Initialization:
+      \begin{enumerate}
+        \item[-]<5->Forgy: Randomly choose $k$ observations and set them as centroids.
+        \item[-]<6->Random partition: initialize nonempty clusters. Use several starts.
+        \item[-]<7->For an empty cluster, reinitialize its centroid to a data point.
+        \item[-]<8> Pick dispersed points as centroids. For e.g. $k$-means++ and variations of it.
+      \end{enumerate}
+  \end{large_enum}
+}
+
+\frame{
+\frametitle{Distance between clusters}
+  \begin{large_enum}
+    \item[-]<1>Complete Linkage\\\normalsize
+          Farthest distance between points in clusters
+    \item[-]<2>Single\\\normalsize
+          Closest pair
+    \item[-]<3>Average\\\normalsize
+          All pairs, and then take the average
+    \item[-]<4>Centroid\\\normalsize
+          Has problems called inversions\\
+          Used in Genomics
+    \item[-]<5>Complete and Average most commonly used
+  \end{large_enum}
+}
+
+\frame{
+\frametitle{Practical Issues}
+  \begin{large_enum}
+    \item[-]<1-4>Choice of Similarity Measure
+      \begin{enumerate}
+        \item[-]<2->Scaling Matters
+        \item[-]<3->Jaccard similarity can be estimated using minhash
+        \item[-]<4->Other distances require appropriate methods, e.g. $k$-medoids, not the ordinary $k$-means mean update
+      \end{enumerate}
+    \item[-]<5>For high-dimensional data, consider scaling and PCA; DANN requires labels.
+    \item[-]<6-8>Choosing $k$:
+    \begin{enumerate}
+      \item[-]<7->Calculate total within-cluster squared distances for multiple $k$
+      \item[-]<8>Plot them, look for the \emph{knee}\\
+      \visible<8>{\includegraphics[width=.9\linewidth,height=.26\textheight,keepaspectratio]{knee.jpg}}
+    \end{enumerate}
+  \end{large_enum}
+}
+\frame{
+\frametitle{A(N)alyst choose $k$ contd.}
+\begin{large_enum}
+\item With cluster sizes $n_k$, means $\bar x_k$, and overall mean $\bar x$:
+\[B_K=\sum_{k=1}^K n_k\|\bar x_k-\bar x\|^2,\quad
+W_K=\sum_{k=1}^K\sum_{i\in C_k}\|x_i-\bar x_k\|^2.\]
+\item Calinski--Harabasz index:
+\[\mathrm{CH}(K)=\frac{B_K/(K-1)}{W_K/(n-K)},\quad 1<K<n,\ W_K>0.\]
+\item Larger values favor greater separation relative to within-cluster spread.
+\end{large_enum}
+}
+\frame{
+\frametitle{Choosing $K$: Gap Statistic}
+\begin{large_enum}
+\item Compare $W_K$ to dispersion $W^*_{Kb}$ from $B$ simulated reference datasets:
+\[\mathrm{Gap}(K)=\frac{1}{B}\sum_{b=1}^B\log W^*_{Kb}-\log W_K.\]
+\item Specify the reference distribution, often uniform over a bounding box in rotated coordinates.
+\item Let $s_K=\operatorname{sd}_b(\log W^*_{Kb})\sqrt{1+1/B}$.
+\item One-standard-error rule: choose the smallest $K$ such that
+\[\mathrm{Gap}(K)\geq\mathrm{Gap}(K+1)-s_{K+1}.\]
+\end{large_enum}
+}
+
+\frame{
+\frametitle{Running Time}
+  \begin{large_enum}
+    \item[-]<1> $O(nKp)$ per Lloyd iteration for $n$ points, $K$ clusters, $p$ features.
+    \item[-]<2> With consistent tie handling, Lloyd iterations terminate; worst cases can take exponentially many steps.
+    \item[-]<3> In practice, use a convergence tolerance and an iteration limit.
+    \item[-]<4-6> Big (Long) Data Solutions:
+      \begin{enumerate}
+        \item[-]<5->Bradley-Fayyad-Reina (BFR)
+        \item[-]<6->CURE
+      \end{enumerate}
+    \item[-]<7-8>BFR
+      \begin{enumerate}
+         \item[-]<7->Summarizes roughly Gaussian clusters with axis-aligned covariance.
+         \item[-]<8->Uses cluster summaries to assess standardized distance to a centroid
+      \end{enumerate}
+  \end{large_enum}
+}
+\end{document}

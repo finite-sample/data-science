@@ -1,0 +1,31 @@
+Do one of the following two projects in R or Python.
+
+A. Build a database of NYC legislation
+
+Start with https://legistar.council.nyc.gov/Legislation.aspx or the official
+Legistar API documentation at https://webapi.legistar.com/Help.
+Choose a date range and define which types of legislative matter to include.
+Retrieve all pages of results within that scope. Save the stable matter ID,
+file number, title, dates, status, and available text or attachment links.
+Check uniqueness, missing fields, and pagination; record the retrieval date.
+The number of records changes over time, so do not use a fixed expected count.
+
+B. Coverage of budget deficits in The New York Times
+
+Use https://developer.nytimes.com/docs/articlesearch-product/1/overview.
+Choose a time span and a documented set of search terms. Construct a monthly
+series of matching articles, deduplicated by article ID. Respect API limits,
+check pagination, and report periods where retrieval is incomplete.
+
+Plot the counts and interpret the results. A count measures the volume of
+matching coverage, not its share of all coverage. To report a share, obtain
+a compatible denominator for each month and explain the archive's coverage.
+Check a sample of matches and nonmatches to assess the query's accuracy.
+
+Deliver a GitHub repository containing:
+- A runnable script and dependency instructions
+- A README describing the scope, definitions, and retrieval date
+- Data in CSV format where redistribution is permitted
+- The requested plots and a short interpretation
+
+Read API keys from environment variables; do not commit them.

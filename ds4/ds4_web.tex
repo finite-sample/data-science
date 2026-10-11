@@ -1,0 +1,298 @@
+\documentclass[compress, black]{beamer}
+\setbeamercolor{normal text}{fg=black}
+\beamertemplatesolidbackgroundcolor{white}
+\usecolortheme[named=black]{structure}
+\usepackage{caption}
+\captionsetup{labelformat=empty}
+\setbeamertemplate{navigation symbols}{}
+%\usefonttheme{structurebold}
+\usepackage[scaled]{helvet}
+\renewcommand*\familydefault{\sfdefault} %% Only if the base font of the document is to be sans serif
+\usepackage[T1]{fontenc}
+\usepackage{setspace}
+%\usepackage{beamerthemesplit}
+\usepackage{graphics}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{verbatim}
+\AtBeginEnvironment{verbatim}{\footnotesize}
+\usepackage{amssymb}
+\usepackage{wrapfig}
+\usefonttheme[onlymath]{serif}
+\usepackage{cmbright}
+
+\def\labelitemi{\textemdash}
+\setbeamertemplate{frametitle}{
+  \begin{centering}
+    \vskip15pt
+    \insertframetitle
+    \par
+  \end{centering}
+}
+\title[DS]{Introduction to Statistical Learning}
+\author[Sood]{Gaurav~Sood}
+  \large
+\date{}
+\subject{LearnDS}
+\begin{document}
+\newcommand{\multilineR}[1]{\begin{tabular}[b]{@{}r@{}}#1\end{tabular}}
+\newcommand{\multilineL}[1]{\begin{tabular}[b]{@{}l@{}}#1\end{tabular}}
+\newcommand{\multilineC}[1]{\begin{tabular}[b]{@{}c@{}}#1\end{tabular}}
+
+\newenvironment{large_enum}{
+\large
+\begin{itemize}
+  \setlength{\itemsep}{5pt}
+  \setlength{\parskip}{0pt}
+  \setlength{\parsep}{0pt}
+}{\end{itemize}}
+
+\frame
+  {
+    \titlepage
+  }
+
+\frame{
+  \frametitle{Two paradigms of learning}
+  \begin{large_enum}
+  \item[--]<2->Supervised Learning
+    \begin{enumerate}
+      \item[--]<3->Learn from examples with observed outcomes (labels)
+      \item[--]<4->Collect representative labeled data
+      \item[--]<5->Estimate relationship between $Y$ and $X$
+      \item[--]<6->Predict labels of unseen data
+      \item[--]<7->Labels and the loss function guide model fitting
+    \end{enumerate}
+  \item[--]<8->Unsupervised Learning
+    \begin{enumerate}
+      \item[--]<9->Find structure without outcome labels
+      \item[--]<10->Examples: clustering, density estimation, dimension reduction
+    \end{enumerate}
+  \end{large_enum}
+}
+
+\frame{
+  \frametitle{How to learn from data?}
+  \begin{large_enum}
+    \item[--]<1->$Y = f(X) + \epsilon$
+    \item[--]<2->How do we estimate $f(X)$?
+    \item[--]<3->If similar $x$, similar $y$
+    \item[--]<4->Function: value of $y$ same as that of the nearest neighbor
+    \item[--]<5->Question and a concern
+      \begin{enumerate}
+        \item[--]<6->What do we mean by nearest?
+        \item[--]<7->Wouldn't it depend on what $x$ are observed?
+      \end{enumerate}
+  \end{large_enum}
+}
+
+\frame{
+  \frametitle{What do we mean by nearest?}
+  \begin{large_enum}
+    \item[-]<2-> Euclidean distance: If $p$ and $q$ are two $n$ dimensional vectors \\\normalsize
+            $d_e(p,q) = \sqrt{\sum\limits_{i=1}^n (q_i - p_i)^2}$
+    \item[-]<3-> Some issues:
+        \begin{itemize}
+          \item[-]<4-> Not all features on the same scale
+          \item[-]<5-> Features may be correlated with each other
+        \end{itemize}
+    \item[-]<6-> Mahalanobis distance between two vectors:\\\normalsize
+            Let $S$ be a positive definite covariance matrix\\
+            $d_m(\vec{p},\vec{q}) = \sqrt{(\vec{p}- \vec{q})'S^{-1}(\vec{p} - \vec{q})}$
+    \item[-]<7-> For sets of nonzero Boolean coordinates, Jaccard distance:\\\normalsize
+            $d_j(p,q) = \frac{\lvert p \cup q \rvert - \lvert p \cap q \rvert}{\lvert p \cup q \rvert} $ \\\pause
+            Set distance to 0 when both sets are empty.
+  \end{large_enum}
+}
+
+\frame{
+  \frametitle{Learning from data}
+  \begin{large_enum}
+    \item[--]<1->$Y = f(X) + e$
+    \item[--]<2->Problem formulated as a regression function \pause \pause
+      \begin{enumerate}
+        \item[--]<4->$E(Y|X)$\\
+        \item[--]<5->$f(x) = E(Y|X=x)$
+      \end{enumerate}
+    \item[--]<6->Nearest neighbour averaging\\\normalsize
+         $\hat{f}(x) = \frac{1}{k}\sum_{i\in N_k(x)}Y_i$
+    \item[--]<7->Great when small $p$, large $N$
+  \end{large_enum}
+}
+
+\frame{
+  \frametitle{Curse of Dimensionality}
+  \begin{large_enum}
+    \item[--]<1->$\hat{f}(x) = \frac{1}{k}\sum_{i\in N_k(x)}Y_i$
+    \item[--]<2->Define neighborhood too tightly, nothing in there.
+    \item[--]<3->If we expand it, nearest neighbors can be far away
+    \item[--]<4->How do we solve the problem?
+    \item[--]<5->One way: parametric and structural models\\
+      $f(x) = \beta_0 + \beta_1*X_1 + \beta_2*X_2 + .....\beta_p*X_p$
+  \end{large_enum}
+}
+\frame{
+  \frametitle{How to expand the linear model?}
+  \begin{large_enum}
+    \item[-]<1-> Simple polynomial transformations
+    \item[-]<2-> Interactions
+    \item[-]<3-> Step functions. E.g. encode $k$ categories with $k-1$ indicators and an intercept.
+    \item[-]<4-> More complicated basis functions:
+      \begin{itemize}
+        \item[-]<5-> Piecewise polynomial: uses a different polynomial for different regions (split by knots)
+        \item[-]<6-> Add constraint that there are no abrupt changes across regions.
+        \item[-]<7-> Add constraint that first and second derivatives agree at knots. (For cubic splines.)
+        \item[-]<8-> Add boundary constraint: linear before 1st knot or after last knot. (Natural spline.)
+      \end{itemize}
+  \end{large_enum}
+}
+
+\frame{
+\frametitle{Error}
+\begin{large_enum}
+\item At a fixed $x$, let $f(x)=E[Y\mid X=x]$.
+\item A fresh outcome has noise variance $\sigma^2(x)$ and is independent of training data $D$.
+\item Under squared loss:
+\end{large_enum}
+\begin{align*}
+E_{D,Y\mid x}[(Y-\hat f_D(x))^2]
+&= \underbrace{(E_D[\hat f_D(x)]-f(x))^2}_{\text{squared bias}}\\
+&\quad+\underbrace{\operatorname{Var}_D(\hat f_D(x))}_{\text{variance}}+\underbrace{\sigma^2(x)}_{\text{irreducible noise}}.
+\end{align*}
+More flexibility can lower bias and raise variance; neither pattern is universal.
+}
+
+\frame{
+\frametitle{Evaluating Models}
+\begin{large_enum}
+\item For independent observations, $L(\theta)=\prod_i p_\theta(y_i\mid x_i)$.
+\item Deviance: $D=2(\ell_{\rm saturated}-\ell_{\rm fitted})$.
+\item Explained-deviance ratio: $1-D_{\rm fitted}/D_{\rm null}$ when $D_{\rm null}>0$. This is not a universal definition of pseudo-$R^2$.
+\item For maximized log-likelihood $\hat\ell$ and $k$ estimated parameters:
+\[\mathrm{AIC}=-2\hat\ell+2k,\qquad \mathrm{BIC}=-2\hat\ell+k\log n.\]
+\end{large_enum}
+Compare likelihoods fitted to the same response data using consistent constants. Smaller values are preferred.
+}
+\frame{
+\frametitle{Information Criteria}
+\begin{large_enum}
+\item Under regularity conditions, expected test deviance exceeds training deviance by about $2k$ (same sample size).
+\item For Gaussian linear regression, counting variance in $k$:
+\[\mathrm{AICc}=\mathrm{AIC}+\frac{2k(k+1)}{n-k-1},\quad n>k+1.\]
+\item This small-sample correction is model dependent.
+\item BIC penalizes each parameter by $\log n$ rather than 2. It targets a different model-selection objective.
+\end{large_enum}
+}
+
+\frame{
+  \frametitle{Evaluating Classification Models}
+    \begin{table}[!htb]
+    \small
+    \centering
+    \begin{tabular}{|cc|cc|}
+      \hline
+              &      & \multicolumn{2}{c|}{\textbf{Observed}} \\
+              &      & true       & false\\[0.5ex]
+        \cline{2-4}
+        \textbf{Predicted}  & true    &   true positive   & false positive\\[0.5ex]
+                & false   &   false negative  & true negative\\[0.5ex]
+          \hline
+    \end{tabular}
+    \end{table}
+
+    \begin{large_enum}
+      \item[--]<2->Confusion matrix, $c^2 -c$ total possible errors
+      \item[--]<3->Accuracy:   $\frac{TP + TN}{TP + TN + FP + FN}$
+      \item[--]<4->Error Rate: $\frac{FP + FN}{TP + TN + FP + FN}$
+      \item[--]<5->Sensitivity, TPR: $\frac{TP}{TP + FN}$
+      \item[--]<6->Specificity, TNR: $\frac{TN}{FP + TN}$
+      \item[--]<7->Balanced error rate: $1-\frac{1}{2}(TPR + TNR)$
+    \end{large_enum}
+}
+
+\frame{
+  \frametitle{Evaluating Classification Models}
+    \begin{large_enum}
+      \item[--]<1->ROC: TPR Vs. FPR
+      \item[--]<2->Precision: fraction of retrieved instances that are relevant\\\normalsize
+             $\frac{TP}{TP + FP}$
+      \item[--]<3->Recall: fraction of relevant instances that are retrieved\\\normalsize
+               $\frac{TP}{TP + FN}$
+      \item[--]<4->$F_1$:   $2\frac{\text{precision*recall}}{\text{precision + recall}}$
+      \item[--]<5->$F_\beta$: $(1 + \beta^2) \frac{\text{precision*recall}}{\beta^2\text{precision + recall}}$
+    \end{large_enum}
+}
+
+\frame{
+  \frametitle{Out of Sample Error}
+  \begin{large_enum}
+    \item[--]<1->Another way to assess model error
+    \item[--]<2->In-sample OLS $R^2$ cannot decrease when adding predictors to a model with an intercept.
+    \item[--]<3->For nested models, the minimized training loss cannot increase.
+    \item[--]<4->Test error may rise as a model overfits; a U-shape is not guaranteed.
+    \item[--]<5->Test $R^2$ can be negative: predictions can be worse than a constant baseline.
+    \item[--]<6->Tune using validation data; reserve test data for final evaluation.
+    \item[--]<7->Net prediction error on test set can vary a lot.
+  \end{large_enum}
+}
+\frame{
+
+  \center{\Large A Clarification}
+}
+\frame{
+  \frametitle{Error in thinking about errors}
+  \begin{large_enum}
+    \item[--]<2->In sciences, `data mining' is a dirty `phrase'
+    \item[--]<3->Jealousy?
+    \item[--]<4->Evokes concerns about false positives \ldots
+    \item[--]<5->But `mining' is by definition `the extraction of valuable [stuff]'
+    \item[--]<6->So -- is more data worse?
+    \item[--]<7->Not quite
+    \item[--]<8->Larger $n$ allows for more precise estimation of relationship
+  \end{large_enum}
+}
+
+\frame{
+  \frametitle{False Positives}
+  \begin{large_enum}
+    \item[--]<1->Significance testing:
+      \begin{enumerate}
+        \item[--]<2->Say .05, 5\% false positive rate
+        \item[--]<3->For 20 true nulls, expect at most 1 rejection at level .05.
+        \item[--]<4->With 95 true nulls, expect up to 4.75 false positives. Even with 5 true discoveries, false discoveries can be a large share.
+      \end{enumerate}
+    \item[--]<5->Fixes:
+      \begin{enumerate}
+        \item[--]<6->Familywise error rate (Bonferroni)
+        \item[--]<7->Optimization can be done w.r.t. to cost of false positive and negative \\
+              e.g. Increase cut-off marks in exams, \href{http://www.cancer.gov/cancertopics/pdq/screening/breast/healthprofessional/page8}{Breast Cancer}
+        \item[--]<8->False Discovery Rate
+      \end{enumerate}
+  \end{large_enum}
+}
+
+\frame{
+  \frametitle{False Discovery Rate}
+  \begin{large_enum}
+    \item[]<1->\[\mathrm{FDP}=\frac{\text{false positives}}{\max(1,\text{rejections})}.\]
+    \item[--]<2->Can't be known but we can produce cutoffs so $E(FDP) \leq q$
+    \item[--]<3->Benjamini and Hochberg (1995):
+        \begin{enumerate}
+          \item[--]<4->Rank the $n$ $p$-values, smallest to largest, $p_1$ \ldots $p_n$.
+          \item[--]<5->$p$-value cut-off = max ($p_k: p_k \leq \frac{qk}{n}$)
+          \item[--]<6->Reject nulls with $p$-values at or below the cutoff; reject none if no cutoff exists.
+          \item[--]<7->Valid under independence or certain positive dependence; arbitrary dependence needs other corrections.
+        \end{enumerate}
+  \end{large_enum}
+}
+
+\frame{
+  \frametitle{Other Ways of Being Wrong}
+  \begin{large_enum}
+    \item[--]<1->Sampling
+    \item[--]<2->Changing data generating process over time
+    \item[--]<3->Confounding in causal claims; leakage of unavailable information into prediction
+    \item[--]<4->Coding and computational errors
+  \end{large_enum}
+}
+\end{document}

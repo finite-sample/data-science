@@ -1,0 +1,471 @@
+\documentclass[compress, black]{beamer}
+\setbeamercolor{normal text}{fg=black}
+\beamertemplatesolidbackgroundcolor{white}
+\usecolortheme[named=black]{structure}
+\usepackage{caption}
+\captionsetup{labelformat=empty}
+\setbeamertemplate{navigation symbols}{}
+%\usefonttheme{structurebold}
+\usepackage[scaled]{helvet}
+\renewcommand*\familydefault{\sfdefault} %% Only if the base font of the document is to be sans serif
+\usepackage[T1]{fontenc}
+\usepackage{setspace}
+%\usepackage{beamerthemesplit}
+\usepackage{graphics}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{verbatim}
+\AtBeginEnvironment{verbatim}{\footnotesize}
+\usepackage{amssymb}
+\usepackage{wrapfig}
+\usefonttheme[onlymath]{serif}
+\usepackage{cmbright}
+
+\def\labelitemi{\textemdash}
+\setbeamertemplate{frametitle}{
+  \begin{centering}
+    \vskip15pt
+    \insertframetitle
+    \par
+  \end{centering}
+}
+\title[DS]{Databases}
+\author[Sood]{Gaurav~Sood}
+  \large
+\date{}
+\subject{LearnDS}
+\begin{document}
+\newcommand{\multilineR}[1]{\begin{tabular}[b]{@{}r@{}}#1\end{tabular}}
+\newcommand{\multilineL}[1]{\begin{tabular}[b]{@{}l@{}}#1\end{tabular}}
+\newcommand{\multilineC}[1]{\begin{tabular}[b]{@{}c@{}}#1\end{tabular}}
+
+\newenvironment{large_enum}{
+\large
+\begin{itemize}
+  \setlength{\itemsep}{5pt}
+  \setlength{\parskip}{0pt}
+  \setlength{\parsep}{0pt}
+}{\end{itemize}}
+
+\frame
+  {
+    \titlepage
+  }
+
+\frame{
+  \frametitle{Data}
+  \begin{large_enum}
+  \item[--]<2->Bits on non-volatile storage e.g. magnetic media, SSD
+  \item[--]<3->Not just bits on hard disk, but organized bits (a data model)
+      \begin{enumerate}
+         \item[-]<4-> Nested folders $\sim$ tree
+         \item[-]<5-> Rows and columns $\sim$ table
+      \end{enumerate}
+  \end{large_enum}
+}
+
+\frame{
+\frametitle{Data Model}
+\begin{large_enum}
+  \item[--]<1->Structure
+      \begin{enumerate}
+        \item[--]<2-> Rows and columns (Relational Database)
+        \item[--]<3-> Key-value pairs (NoSQL systems)
+        \item[--]<4-> Sequence of bytes (Files)
+      \end{enumerate}
+  \item[--]<5->Constraints
+      \begin{enumerate}
+        \item[--]<6-> All columns must be of same length
+        \item[--]<7-> Each value in this column has to be X
+        \item[--]<8-> Child cannot have two parents (tree) (before Gmail Labels)
+      \end{enumerate}
+  \item[--]<9->(Efficiently Supported) Operations
+      \begin{enumerate}
+        \item[--]<10-> Look up value of key x.
+        \item[--]<11-> Find me rows where column `lastname' is Jordan.
+        \item[--]<12-> Get next $n$ bytes.
+      \end{enumerate}
+  \end{large_enum}
+}
+
+\frame{
+\frametitle{Questions to consider}
+  \begin{large_enum}
+    \item[--]<1-> What are the features of the data? How do we plan to use the data?
+    \item[--]<2-> How often are the data updated?
+    \item[--]<3-> What queries are efficiently supported?
+    \item[--]<4-> How are the data stored on disk -- the physical data model?
+    \item[--]<5-> How are data organized internally -- the abstract data model?
+  \end{large_enum}
+}
+
+\frame{
+\frametitle{What are databases?}
+  \begin{large_enum}
+    \item[--]<1-> Organized collection of data.
+    \item[--]<2-> Organized to afford efficient retrieval (aim can vary).
+    \item[--]<3-> Data + Metadata about structure and organization.
+    \item[--]<4-> Data that are self-describing $\sim$ have a schema.
+    \item[--]<5-> Generally accessed through a Database Management System.
+  \end{large_enum}
+}
+
+\frame{
+\frametitle{What do Database Systems (DBMS) do?}
+  \begin{large_enum}
+  \item[--]<1-> Provide \alert{efficient}, \alert{reliable}, \alert{convenient} and \alert{safe}, \alert{multi-user} storage of and access to \alert{massive} amounts of data.
+    \begin{enumerate}
+      \item[--]<2-> \textbf{Massive:} Terabytes. Handle data that reside outside memory.
+      \item[--]<3-> \textbf{Safe:} Robust to power outages, node failures etc.
+      \item[--]<4-> \textbf{Multi-user:} Concurrency control. Not one user/ one user per data item. File system concurrency.
+      \item[--]<5-> \textbf{Convenient:} High level query languages; declarative: what you want, not describe algorithm
+      \item[--]<6-> \textbf{Efficient:} Performance, performance, performance.
+      \item[--]<7-> \textbf{Reliable:} Availability depends on architecture, operations, and failure recovery.
+    \end{enumerate}
+  \end{large_enum}
+}
+
+\frame{
+\frametitle{Key concepts}
+\begin{large_enum}
+    \item[--]<1->Data model\\\normalsize
+           XML, relational model, etc.
+    \item[--]<2->Schema versus data distinction\\\normalsize
+           Types versus variables\\
+           Schema (types, structure), actual data\\
+    \item[--]<3->Data definition language (DDL)\\\normalsize
+           For setting up schema
+    \item[--]<4->Data manipulation or query language (DML)\\\normalsize
+           For querying and modifying the database
+  \end{large_enum}
+}
+
+\frame{
+
+  \Large Some Data Models
+}
+\frame{
+\frametitle{XML}
+  \begin{large_enum}
+  \item[--]<1->Extensible Markup Language\\\normalsize
+         Similar to HTML\\
+         Tags describe data rather than how to format
+  \item[--]<2->Standard for data exchange and representation
+  \item[--]<3->XML
+        \begin{enumerate}
+         \item[--]<4-> Tagged elements
+         \item[--]<5-> Nesting of elements
+         \item[--]<6-> Attributes
+         \item[--]<7-> Not all elements have attributes
+         \end{enumerate}
+  \end{large_enum}
+}
+\begin{frame}[fragile]
+\frametitle{Plain Text}
+\begin{verbatim}
+June 5, 2006
+Floor Statement of Senator Barack Obama
+Federal Marriage Amendment
+
+Decisions about marriage should be left to the states.
+\end{verbatim}
+A short summary with a date and title, but no explicit field boundaries.
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{XML}
+\begin{verbatim}
+<DOC>
+  <DOCNO>obama-2006-06-05-01</DOCNO>
+  <DATE>2006-06-05</DATE>
+  <TITLE>Federal Marriage Amendment</TITLE>
+  <SUMMARY>
+    Decisions about marriage should be left to the states.
+  </SUMMARY>
+</DOC>
+\end{verbatim}
+Elements identify fields; nesting expresses structure.
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{JSON}
+\begin{verbatim}
+{
+  "name": "Example Organization",
+  "members": 42,
+  "active": true,
+  "address": null,
+  "topics": ["science", "education"]
+}
+\end{verbatim}
+JSON uses double-quoted keys and strings. Its values include objects, arrays, numbers, booleans, and null.
+\end{frame}
+
+\frame{
+\frametitle{Relational Model}
+  \begin{large_enum}
+    \item[--]<1->RDBMS-- Codd 1970
+    \item[--]<2->Database: set of named relations (or tables)
+    \item[--]<3->Each relation has a set of named attributes (or columns)
+    \item[--]<4->Each attribute (column) has a type (or domain)\\\normalsize
+           There is also concept of an enumerated domain
+    \item[--]<5->Each row (= tuple)
+    \item[--]<6->Schema-- structure, name, type of attributes
+    \item[--]<7->\alert{Everything is a table}
+  \end{large_enum}
+}
+
+\frame{
+\frametitle{Relational Model}
+  \begin{large_enum}
+    \item[--]<1->Relationships are implicit; no pointers
+      \begin{enumerate}
+        \item[--]<2-> Physical Data independence
+        \item[--]<3-> Compare to Network Data Model etc.
+      \end{enumerate}
+    \item[--]<4->Example:
+      \begin{enumerate}
+        \item[--]<5-> \lbrack course, Student id \rbrack, \lbrack student id, student name\rbrack
+        \item[--]<6-> Just a shared id
+        \item[--]<7-> Join enrollments to students on student id; indexes can make lookups efficient
+          \item[--]<8-> Physical layout and indexes affect query speed
+          \item[--]<9-> Choose indexes for queries in both directions
+      \end{enumerate}
+  \end{large_enum}
+}
+
+\frame{
+  \frametitle{Relational Vs. XML}
+  \begin{table}[h]
+  \begin{tabular}{l|l|l}
+          &  Relational     & XML       \\
+   Structure  &  Tables     &  Hierarchical \\
+   Schema       &  Declared schema  &  Flexible, self-describing\\
+   Queries      &  SQL      & XPath / XQuery\\
+   Ordering     &  Unordered    & Implied order (document) \\
+  \end{tabular}
+  \end{table}
+}
+
+\frame{
+\frametitle{Algebra of Tables}
+  \begin{large_enum}
+    \item[--]<1->In algebra, concept of algebraic optimization -- Rules to simply calculation
+    \item[--]<2->SQL uses relational algebra
+    \item[--]<3->All RDBMS optimize relational algebra `calculations'
+    \item[--]<4->Cost-based optimization
+    \item[--]<5->\alert{We can leave this optimization to program}
+  \end{large_enum}
+}
+\frame{
+\frametitle{Algebra of Tables}
+  \begin{large_enum}
+  \item[--]<1->Basic Relational Algebra
+    \begin{enumerate}
+      \item[--]<2->Union, Intersection, Difference\\
+      \item[--]<3->Selection, $\sigma$\\
+      \item[--]<4->Projection, $\Pi$\\
+      \item[--]<5->Join, $\bowtie$
+    \end{enumerate}
+  \item[--]<6->Extended Relational Algebra:
+      \begin{enumerate}
+        \item[--]<7->Duplicate elimination, $d$\\
+        \item[--]<8->Grouping and aggregation, $g$\\
+        \item[--]<9->Sorting, $t$
+      \end{enumerate}
+  \item[--]<10->Sets Vs Bags
+      \begin{enumerate}
+        \item[--]<11->Sets: \{a,b,c\} (RA, Papers)
+        \item[--]<12->Bags: \{a,a,b,c\} (SQL)
+      \end{enumerate}
+  \end{large_enum}
+}
+
+\frame{
+\frametitle{Select Rows}
+  \begin{large_enum}
+  \item[--]<1->Tuples (rows) that satisfy a particular criteria
+  \item[--]<1->$\sigma_\text{condition} \text{Relation}$\\
+         Pick Certain Rows
+  \item[--]<2->$\sigma_{GPA > 3} \text{Student}$\\
+         $\sigma_{GPA > 3 \wedge LastName=='Smith'} \text{Student}$\\
+  \item[--]<3->In SQL, selection using `Where' (and project using `Select')
+  \end{large_enum}
+}
+
+\frame{
+\frametitle{Project}
+  \begin{large_enum}
+  \item[--]<1->$\Pi_\text{A1, A2} \text{Relation}$\\
+         Pick Certain Columns
+  \item[--]<2->$\Pi_\text{SSN, GPA} \text{Student}$\\
+  \item[--]<3->Both Select and Project\\
+         $\Pi_\text{SSN, GPA} (\sigma_{GPA > 3} \text{Student})$\\
+         $\Pi_\text{A1, A2} \text{Expression}$\\
+         $\sigma_\text{condition} \text{Expression}$\\
+  \end{large_enum}
+}
+\frame{
+  \frametitle{SQL}
+  Select Col1, Col2 (or *)\\
+  FROM R1\\
+  Where Condition
+}
+\frame{
+\frametitle{Cross-Product}
+  \begin{large_enum}
+  \item[--]<1->Cartesian Product
+  \item[--]<2->R1 X R2; Every tuple in R1 with each tuple in R2
+  \item[--]<3->Size of ouput: R1 * R2
+  \item[--]<4->SELECT *\\
+         FROM R1 CROSS JOIN R2;
+  \item[--]<5->SELECT *\\
+         FROM R1, R2;
+\end{large_enum}
+}
+
+\frame{
+\frametitle{Equi-Join}
+  \begin{large_enum}
+  \item[--]<1->Join on an equality condition
+  \item[--]<2->For every record in R1, find a tuple in R2 that satisfies a particular condition
+  \item[--]<3->Select * \\
+        From R1, R2\\
+        Where R1.A = R2.A
+  \item[--]<4->Or, do the cross-product and then filter
+  \item[--]<5->Select *\\
+        From R1 Join R2\\
+        On R1.A = R2.A\\
+\end{large_enum}
+}
+\frame{
+\frametitle{Natural Join}
+\begin{large_enum}
+\item A natural join equates every column name shared by both tables.
+\item It returns one copy of each shared column.
+\item Adding a same-named column can silently change the join. Explicit ON or USING clauses make the intended keys clear.
+\end{large_enum}
+}
+\frame{
+\frametitle{Theta Join}
+\begin{large_enum}
+  \item[--]<1->Join on a specified predicate, which may include equality
+  \item[--]<2->Equi-Join is a special case of theta join
+  \item[--]<3->Find ALL weather stations within 5 miles of centroid of a zip code
+  \item[--]<4->Select Distinct h.station\_id\\
+         From Wstations h, ZipCode s\\
+         Where distance(h.location, s.location) <= 5\\
+  \item[--]<4->`distance' is a user-defined function returning miles
+  \item[--]<5->Band Joins or Range Joins
+\end{large_enum}
+}
+\frame{
+\frametitle{Outer Join}
+  \begin{large_enum}
+    \item[--]<1->Outer Join
+    \item[--]<2->Keep every R1 row; use NULLs for unmatched R2 columns.
+    \item[--]<3->Left outer join\\
+          Select *\\
+          From R1 LEFT OUTER Join R2\\
+          On R1.A = R2.A
+    \item[--]<4->Right outer join
+    \item[--]<5->Full outer join
+  \end{large_enum}
+}
+
+\frame{
+\frametitle{Union}
+  \begin{large_enum}
+  \item[--]<1->R1 U R2\\
+         Removes duplicates by default
+  \item[--]<2->Select * FROM R1\\
+        UNION\\
+        Select * FROM R2
+  \item[--]<3->If you wanted duplicates, you want to do `UNION ALL'
+  \end{large_enum}
+}
+\frame{
+\frametitle{Difference}
+  \begin{large_enum}
+  \item[--]<1->R1 - R2
+  \item[--]<2->Select * From R1\\
+        Except\\
+        Select * From R2
+  \item[--]<3->Looks up all tuples in R1 and takes out tuples that it also sees in R2\\\normalsize
+         R2 can have other tuples\\
+         Everything in R1, remove things that also appear in R2
+\end{large_enum}
+}
+\frame{
+\frametitle{Intersection}
+  \begin{large_enum}
+  \item[--]<1->Not a fundamental operator
+  \item[--]<2->R1 Intersect R2 = R1 - (R1 - R2)
+  \item[--]<3->Can also express it as join
+\end{large_enum}
+}
+
+\frame{
+  \frametitle{(Virtual) Views}
+  \begin{large_enum}
+  \item[--]<1->Defining and Using (Virtual) Views\\\normalsize
+         Three-level vision of database\\
+         Physical layer, Conceptual (abstraction of the data, relations), Logical layer (further abstraction, )\\
+         Real applications use lots and lots of views
+
+  \item[--]<2->Benefit of Views\\\normalsize
+        Hide some data from some users (Authorization etc.)\\
+        Make certain queries easier, more natural\\
+        Modularity of database access
+
+  \item[--]<3->Views\\\normalsize
+        Query over relations\\
+        View V  = ViewQuery(R1, R2,... RN)\\
+        Schema of V is schema of query result
+  \end{large_enum}
+}
+\frame{
+  \frametitle{Query over views}
+  \begin{large_enum}
+  \item[--]<1->V can be thought of as a table
+  \item[--]<2->Q is actually rewritten in terms of R1, R2, ....RN
+  \item[--]<3->R1 can also be view
+  \item[--]<4->CREATE View VName (A1, ..., AN) As Query
+  \item[--]<5->Just define the view and use them (System optimizes in terms of `base tables')
+  \item[--]<6->View contents not stored
+  \item[--]<7->A convenient view is a join
+\end{large_enum}
+}
+
+\frame{
+  \frametitle{Modifying Views}
+  \begin{large_enum}
+  \item[--]<1->Some DBMSs support updates through suitable views.
+  \item[--]<2->SQLite views are read-only unless an INSTEAD OF trigger implements the change to base tables.
+  \end{large_enum}
+}
+\frame{
+  \frametitle{Materialized Views}
+  \begin{large_enum}
+  \item[--]<1->Creates a physical table
+  \item[--]<2->But \ldots
+    \begin{enumerate}
+      \item[--]<3->Tables can be very large
+      \item[--]<4->What happens when modifications happen to the base tables
+      \item[--]<5->Modification to base data can invalidate the view
+    \end{enumerate}
+\end{large_enum}
+}
+
+\frame{
+  \frametitle{SQLite: Storage Classes}
+  \begin{large_enum}
+  \item[--]<1->NULL --  The value is a NULL value
+  \item[--]<2->INTEGER -- a signed integer
+  \item[--]<3->REAL -- a floating point value
+  \item[--]<4->TEXT -- a text string
+  \item[--]<5->BLOB -- a blob of data
+  \end{large_enum}
+}
+
+\end{document}
